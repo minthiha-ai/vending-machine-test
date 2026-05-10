@@ -44,8 +44,11 @@ class Router
         $uri        = '/' . trim($uri, '/');
         $httpMethod = strtoupper($httpMethod);
 
+        // HEAD is identical to GET but without a response body (RFC 9110)
+        $matchMethod = $httpMethod === 'HEAD' ? 'GET' : $httpMethod;
+
         foreach ($this->routes as $route) {
-            if ($route['method'] !== $httpMethod) {
+            if ($route['method'] !== $matchMethod) {
                 continue;
             }
             if (!preg_match($route['pattern'], $uri, $matches)) {
